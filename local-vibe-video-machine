@@ -41,3 +41,24 @@ def assemble_video(video_paths, output_name="final_video.mp4"):
     final_clip = concatenate_videoclips(clips, method="compose")
     final_clip.write_videofile(output_name, fps=24)
     print(f"Success! Video saved as {output_name}")
+
+if __name__ == "__main__":
+    # 1. Your input "Vibe"
+    prompt = "A futuristic neon city in the rain" 
+    
+    # 2. Set your local path (Change this to where your videos are)
+    my_asset_folder = "./assets" 
+
+    print("--- Step 1: Generating Script ---")
+    script = generate_script(prompt)
+    print(f"Script: {script}")
+
+    print("\n--- Step 2: Matching Assets ---")
+    matched_videos = find_local_assets(script, my_asset_folder)
+    print(f"Found files: {matched_videos}")
+
+    if matched_videos:
+        print("\n--- Step 3: Assembling Final Video ---")
+        assemble_video(matched_videos, "my_vibe_video.mp4")
+    else:
+        print("No matching videos found in your folder!")
