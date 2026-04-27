@@ -1,0 +1,43 @@
+pip install ollama moviepy requests
+import ollama
+
+def generate_script(user_prompt):
+    """Uses Ollama to generate a scene-by-scene script."""
+    system_instruction = "You are a director. Break the prompt into 3 scenes. Output ONLY a list of descriptions."
+    
+    response = ollama.chat(
+        model='llama3.2', 
+        messages=[
+            {'role': 'system', 'content': system_instruction},
+            {'role': 'user', 'content': user_prompt}
+        ]
+    )
+    # Extract the script content
+    return response['message']['content'].split('\n')
+
+# Example usage:
+# script = generate_script("A futuristic neon city in the rain")
+
+import os
+
+def find_local_assets(scene_descriptions, dataset_path):
+    """Matches script scenes to existing files in your local video folder."""
+    matched_files = []
+    all_videos = os.listdir(dataset_path)
+    
+    for scene in scene_descriptions:
+        # Simple keyword matching logic; can be upgraded to semantic search later
+        for video in all_videos:
+            if any(word.lower() in video.lower() for word in scene.split()):
+                matched_files.append(os.path.join(dataset_path, video))
+                break 
+    return matched_files
+
+from moviepy.editor import VideoFileClip, concatenate_videoclips
+
+def assemble_video(video_paths, output_name="final_video.mp4"):
+    """Stitches video clips into a single file."""
+    clips = [VideoFileClip(p).subclip(0, 5) for p in video_paths] # Limits clips to 5s
+    final_clip = concatenate_videoclips(clips, method="compose")
+    final_clip.write_videofile(output_name, fps=24)
+    print(f"Success! Video saved as {output_name}")
