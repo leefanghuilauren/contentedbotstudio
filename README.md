@@ -1,4 +1,4 @@
-# 🎬 VideoAgent Studio
+# 🎬 ContentedBot Studio
 
 A fully offline, data-driven video generation pipeline. Build characters, pick scenes,
 clone your voice, animate lips, and auto-generate videos from your own datasets.
